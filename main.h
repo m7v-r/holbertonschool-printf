@@ -2,26 +2,39 @@
 #define MAIN_H
 
 #include <stdarg.h>
+#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
+
+#define UNUSED(x) (void)(x)
+#define BUFF_SIZE 1024
 
 /**
- * struct format - Structure to match specifiers with functions
- * @spec: The specifier (e.g., 'c', 's', 'd', 'i')
- * @f: The function pointer associated
+ * struct fmt - Struct op
+ * @fmt: The format
+ * @fn: The function associated
  */
-typedef struct format
+struct fmt
 {
-	char *spec;
-	int (*f)(va_list);
-} fmt_t;
+	char fmt;
+	int (*fn)(va_list, char[], int, int, int, int);
+};
+
+typedef struct fmt fmt_t;
 
 int _printf(const char *format, ...);
-int _putchar(char c);
-int print_char(va_list args);
-int print_string(va_list args);
-int print_percent(va_list args);
-int print_int(va_list args);
-int recursive_int(unsigned int n);
+int handle_print(const char *fmt, int *i, va_list list, char buffer[],
+	int flags, int width, int precision, int size);
 
-#endif /* MAIN_H */
+/* Prototypes for functions */
+int print_char(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_string(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_percent(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_int(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+int print_binary(va_list types, char buffer[],
+	int flags, int width, int precision, int size);
+
+#endif
