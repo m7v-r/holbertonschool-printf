@@ -1,0 +1,37 @@
+.TH _printf 3 "2026-4-17" "My custom library"
+.SH NAME
+_printf \- formatted output conversion
+.SH SYNOPSIS
+.B #include "main.h"
+.BI "int _printf(const char * format", ...);"
+.SH DESCRIPTION
+The _printf function write output under the control of a format string that specifies how subsequent arguments (or arguments accessed via the variable-length argument facilities of stdarg(3)) are converted for output to stdout, the standard output stream.
+.RS
+.B Format of the format string
+The format string is a character string , beginning and ending in its initial shift state, if any. The format string is composed of conversion specifications, each of which results in fetching zero or more subsequent arguments. Each conversion specificaion is introduced by the character %, and ends with a conversion specifier.
+
+The syntax of a conversion specification is:
+%conversion
+
+The arguments must correspond properly with the conversion specifier. Each conversion specifier asks for the next argument.
+.SH CONVERSION SPECIFIERS
+.TP
+.B d, i
+The int argument is converted to signed decimal notation.
+.TP
+.B c
+The int argument is converted to an unsigned char, and the resulting character is written.
+.TP
+.B s
+The const char * argument is expected to be a pointer to an array of character type (pointer to a string). characters from the array are written up to (but not including) a terminating null byte ('\0').
+.TP
+.B %
+A '%' is written. No argument is converted. The complete conversion specification is '%%'.
+.SH RETURN VALUE
+Upon successful return, the function return the number of bytes printed (excluding the null byte used to end output to strings).
+If an output error is encountered, a negative value is returned.
+.SH EXAMPLE
+#include "main.h"
+_printf("number %d, char %c", somearg, otherarg);
+.SH AUTHORS
+Mohammed Aldawsari, Abdulwahab Almatrudi
