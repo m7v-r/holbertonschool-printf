@@ -1,49 +1,5 @@
 #include "main.h"
-/**
- * print_int - Prints an integer
- * @types: List of arguments
- * @buffer: Buffer array to handle print
- * @flags: Calculates active flags
- * @width: get width
- * @precision: Precision specification
- * @size: Size specifier
- * Return: Number of chars printed
- */
-int print_int(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	int i = BUFF_SIZE - 2;
-	int is_negative = 0;
-	long int n = va_arg(types, long int);
-	unsigned long int num;
 
-	UNUSED(width); UNUSED(size); UNUSED(precision); UNUSED(flags);
-
-	if (n == 0)
-		buffer[i--] = '0';
-
-	buffer[BUFF_SIZE - 1] = '\0';
-	num = (unsigned long int)n;
-
-	if (n < 0)
-	{
-		num = (unsigned long int)((-1) * n);
-		is_negative = 1;
-	}
-
-	while (num > 0)
-	{
-		buffer[i--] = (num % 10) + '0';
-		num /= 10;
-	}
-
-	if (is_negative)
-		buffer[i--] = '-';
-
-	i++;
-
-	return (write(1, &buffer[i], BUFF_SIZE - 1 - i));
-}
 /**
  * print_unsigned - Prints an unsigned number
  * @types: List of arguments
@@ -58,82 +14,25 @@ int print_unsigned(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
 	int i = BUFF_SIZE - 2;
-	unsigned long int num = va_arg(types, unsigned long int);
+	/* تغيير النوع هنا من long إلى unsigned int */
+	unsigned int num = va_arg(types, unsigned int);
 
 	UNUSED(flags); UNUSED(width); UNUSED(precision); UNUSED(size);
+
 	if (num == 0)
 		buffer[i--] = '0';
+
 	buffer[BUFF_SIZE - 1] = '\0';
+
 	while (num > 0)
 	{
 		buffer[i--] = (num % 10) + '0';
 		num /= 10;
 	}
+
 	i++;
+
 	return (write(1, &buffer[i], BUFF_SIZE - 1 - i));
-}
-
-/**
- * print_octal - Prints an unsigned number in octal notation
- * @types: List of arguments
- * @buffer: Buffer array
- * @flags: Flags
- * @width: Width
- * @precision: Precision
- * @size: Size
- * Return: Number of chars printed
- */
-int print_octal(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	int i = BUFF_SIZE - 2;
-	unsigned long int num = va_arg(types, unsigned long int);
-
-	UNUSED(flags); UNUSED(width); UNUSED(precision); UNUSED(size);
-	if (num == 0)
-		buffer[i--] = '0';
-	buffer[BUFF_SIZE - 1] = '\0';
-	while (num > 0)
-	{
-		buffer[i--] = (num % 8) + '0';
-		num /= 8;
-	}
-	i++;
-	return (write(1, &buffer[i], BUFF_SIZE - 1 - i));
-}
-
-/**
- * print_hexadecimal - Prints an unsigned number in hexadecimal notation
- * @types: List of arguments
- * @buffer: Buffer array to handle print
- * @flags: Flags
- * @width: Width
- * @precision: Precision
- * @size: Size
- * Return: Number of chars printed
- */
-int print_hexadecimal(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	return (print_hexa(types, "0123456789abcdef", buffer,
-		flags, 'x', width, precision, size));
-}
-
-/**
- * print_hexa_upper - Prints an unsigned number in upper hexadecimal notation
- * @types: List of arguments
- * @buffer: Buffer array to handle print
- * @flags: Flags
- * @width: Width
- * @precision: Precision
- * @size: Size
- * Return: Number of chars printed
- */
-int print_hexa_upper(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	return (print_hexa(types, "0123456789ABCDEF", buffer,
-		flags, 'X', width, precision, size));
 }
 
 /**
@@ -152,17 +51,51 @@ int print_hexa(va_list types, char map_to[], char buffer[],
 	int flags, char flag_ch, int width, int precision, int size)
 {
 	int i = BUFF_SIZE - 2;
-	unsigned long int num = va_arg(types, unsigned long int);
+	/* تغيير النوع هنا أيضاً لضمان حدوث الـ Overflow الصحيح */
+	unsigned int num = va_arg(types, unsigned int);
 
 	UNUSED(flags); UNUSED(flag_ch); UNUSED(width); UNUSED(precision); UNUSED(size);
+
 	if (num == 0)
 		buffer[i--] = '0';
+
 	buffer[BUFF_SIZE - 1] = '\0';
+
 	while (num > 0)
 	{
 		buffer[i--] = map_to[num % 16];
 		num /= 16;
 	}
+
 	i++;
+
+	return (write(1, &buffer[i], BUFF_SIZE - 1 - i));
+}
+
+/**
+ * print_octal - Prints an unsigned number in octal notation
+ */
+int print_octal(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	int i = BUFF_SIZE - 2;
+	/* تغيير النوع هنا أيضاً */
+	unsigned int num = va_arg(types, unsigned int);
+
+	UNUSED(flags); UNUSED(width); UNUSED(precision); UNUSED(size);
+
+	if (num == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFF_SIZE - 1] = '\0';
+
+	while (num > 0)
+	{
+		buffer[i--] = (num % 8) + '0';
+		num /= 8;
+	}
+
+	i++;
+
 	return (write(1, &buffer[i], BUFF_SIZE - 1 - i));
 }
